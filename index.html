@@ -1,62 +1,35 @@
-<script src="https://cdn.jsdelivr.net/gh/netizenorg/netnet-standard-library/build/nn.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/netizenorg/netnet-standard-library/build/nn.min.js?v=9000"></script>
+<script src="https://unpkg.com/tone"></script>
 <script>
-/* global nn */
+/* global nn, Tone */
+  //Tone.js alows us to express audio w less code
+//const synth = new Tone.Synth().toDestination()
+  
 
-const filename = 'electric-piano-chords.mp3'
-let music
+//playing multiple
+const synth = new Tone.PolySynth().toDestination()
+const scale = nn.createScale('C4', 'major') //can also be minor and see in console log, can be a D#4 Major, etc. 
+const chord = nn.createChord(scale, 'triad') //1, 3, 5
+let keydown = false
+//let step = 0
 
-const samples = {
-  q: {offset: 11.645833333333334, duration: 1.354166666666666, color: 'red'},
-  w: {offset: 13.645833333333334, duration: 1, color: 'green'},
-  e: {offset: 15.354166666666666, duration: 0.750000000000001, color: 'pink'},
-  r: {offset: 19.583333333333332, duration: 1.0833333333333357, color: 'magenta'}
+function startPlaying() {
+  //console.log(nn.notes)
+  if (!keydown) {
+    //const next = scale[step]
+    ///const ran - nn.random(scale)
+    ///const ran = nn.random(nn.notes) + 4
+    synth.triggerAttack(chord) //keydown
+    keydown = true
+    //step++
+    //if (step >= chord.length) step = 0
+  } 
+}
+function stopPlaying() {
+  synth.triggerRelease(chord) //keyup
+  keydown = false
 }
 
-async function play (e) {
-  const s = samples[e.key]
-  nn.get('body').css('background', s.color)
-  
-  music.currentTime = s.offset
-  
-  music.play()
-  await nn.sleep(s.duration * 1000)
-  music.pause()
-}
-async function remix () {
-  music.volume = nn.random(0.25, 0.5)
-  music.currentTime = nn.random(0, music.duration)
-  const time = nn.random(250, 500)
-  await nn.sleep(time)
-  remix()
-}
-async function play () {
-    music.preservesPitch = false;
-    music.playbackRate = 0.5
-    music.play()
-  }
-function setup() {
-  music = nn.create('audio')
-  .set({
-    src: filename,
-    controls: true,
-    loop: true
-  })
-  .addTo('body')
-  //.on('loadeddata', () => music.play()) //two functions runwhen loaded data happens
-  .on('loadeddata', remix)
-}
-  //frequency: how fast or slow it should go
-  
-function animate (){
-  requestAnimationFrame(animate);
-  console.log(music.currentTime)
-}
-  
-nn.on('load', setup)
-nn.on('keydown', play)
-nn.on('touchstart', play)
-  
-  
-nn.on('load', animate)
-nn.on('click', play)
+nn.on('keydown', startPlaying)
+nn.on('keyup', stopPlaying)
 </script>
