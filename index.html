@@ -30,7 +30,7 @@ function setup() {
   const offWindow = makeBox('absolute', '30px', '50px', '10px', '10px', '50%', 'yellow')
   offWindow.addTo('body');
   
-  const building = makeBox('absolute', nn.width/2, nn.height/2, 'auto', 'auto', '100%', 'black')
+  const building = makeBox('absolute', nn.width/2, nn.height/2, nn.width/4, nn.height/2, '100%', 'black')
   building.addTo('body');
   
   nn.get('body').css({backgroundImage: 'linear-gradient(black, navy, black)', height: '1000px'})
