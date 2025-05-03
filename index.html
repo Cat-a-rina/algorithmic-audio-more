@@ -1,5 +1,6 @@
 <script src="https://cdn.jsdelivr.net/gh/netizenorg/netnet-standard-library/build/nn.min.js?v=9000"></script>
 <script src="https://unpkg.com/tone"></script>
+<body></body>
 <script>
 /* global nn, Tone */
   //Tone.js alows us to express audio w less code
@@ -8,10 +9,32 @@
 
 //playing multiple
 const synth = new Tone.PolySynth().toDestination()
-const scale = nn.createScale('C4', 'major') //can also be minor and see in console log, can be a D#4 Major, etc. 
+const scale = nn.createScale('C5', 'major') //can also be minor and see in console log, can be a D#4 Major, etc. 
 const chord = nn.createChord(scale, 'triad') //1, 3, 5
 let keydown = false
 //let step = 0
+
+function makeBox(pos, wid, hei, l, t, op, col) {
+  return nn.create('div').css({
+    position: pos,
+    width: wid,
+    height: hei,
+    left: l,
+    top: t,
+    opacity: op,
+    backgroundColor: col
+  })
+}
+
+function setup() {
+  const offWindow = makeBox('absolute', '30px', '50px', '10px', '10px', '50%', 'yellow')
+  offWindow.addTo('body');
+  
+  const building = makeBox('absolute', nn.width/2, nn.height/2, 'auto', 'auto', '100%', 'black')
+  building.addTo('body');
+  
+  nn.get('body').css({backgroundImage: 'linear-gradient(black, navy, black)', height: '1000px'})
+}
 
 function startPlaying() {
   //console.log(nn.notes)
@@ -32,4 +55,6 @@ function stopPlaying() {
 
 nn.on('keydown', startPlaying)
 nn.on('keyup', stopPlaying)
+nn.on('load', setup)
+//nn.create('span').content('')
 </script>
