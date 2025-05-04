@@ -6,7 +6,7 @@
   //Tone.js alows us to express audio w less code
 //const synth = new Tone.Synth().toDestination()
   
-
+//let dancing = []
 //playing multiple
 const synth = new Tone.PolySynth().toDestination()
 const scale = nn.createScale('C5', 'major') //can also be minor and see in console log, can be a D#4 Major, etc. 
@@ -23,15 +23,39 @@ function makeBox(pos, wid, hei, l, t, op, col) {
     top: t,
     opacity: op,
     backgroundColor: col
-  })
+  }).addTo('body')
 }
 
 function setup() {
-  const offWindow = makeBox('absolute', '30px', '50px', '10px', '10px', '50%', 'yellow')
-  offWindow.addTo('body');
   
-  const building = makeBox('absolute', nn.width/2, nn.height/2, nn.width/4, nn.height/2, '100%', 'black')
-  building.addTo('body');
+  const building = nn.create('div').css({
+    position: 'absolute',
+    width: nn.width/2,
+    height: nn.height,
+    left: nn.width/4,
+    top: nn.height/4,
+    opacity: '60%',
+    backgroundColor: 'black'
+  }).addTo('body')
+  
+  let adjust = 10
+  let hDiff = 10;
+  const rows = nn.height / 70;
+  for (let k = 0; k < rows; k++) {
+    for (let j = 0; j < 5; j++) {
+      for (let i = 0; i < 3; i++) {
+        building.append(makeBox('absolute', '30px', '50px', adjust, hDiff, '30%', 'yellow'))
+        adjust += 12
+        }
+      building.append(makeBox('absolute', '30px', '50px', adjust, hDiff, '80%', 'yellow'))
+      adjust += 40
+    }
+    hDiff += 70
+    adjust = 10
+  }
+  
+  
+  
   
   nn.get('body').css({backgroundImage: 'linear-gradient(black, navy, black)', height: '1000px'})
 }
