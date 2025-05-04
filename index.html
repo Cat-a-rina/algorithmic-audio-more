@@ -6,7 +6,7 @@
   //Tone.js alows us to express audio w less code
 //const synth = new Tone.Synth().toDestination()
   
-//let dancing = []
+let dancing = ['couple1.png', 'couple2.png', 'couple3.png', 'jumpingGirl.png', 'soloHatMan1.png', 'soloWoman1.png', 'soloWoman2.png', 'soloWoman3.png']
 //playing multiple
 const synth = new Tone.PolySynth().toDestination()
 const scale = nn.createScale('C5', 'major') //can also be minor and see in console log, can be a D#4 Major, etc. 
@@ -55,8 +55,6 @@ function setup() {
   }
   
   
-  
-  
   nn.get('body').css({backgroundImage: 'linear-gradient(black, navy, black)', height: '1000px'})
 }
 
@@ -68,6 +66,7 @@ function startPlaying() {
     ///const ran = nn.random(nn.notes) + 4
     synth.triggerAttack(chord) //keydown
     keydown = true
+    dancing[1].addTo('body')
     //step++
     //if (step >= chord.length) step = 0
   } 
