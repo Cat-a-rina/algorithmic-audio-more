@@ -5,11 +5,22 @@
 /* global nn, Tone */
   //Tone.js alows us to express audio w less code
 //const synth = new Tone.Synth().toDestination()
-  
-let dancing = ['couple1.png', 'couple2.png', 'couple3.png', 'jumpingGirl.png', 'soloHatMan1.png', 'soloWoman1.png', 'soloWoman2.png', 'soloWoman3.png']
+
+nn.create('div').content('Play any key to see people of the city dance the night away ✨').css({
+      position: 'absolute',
+      color: 'white',
+      left: '10%',
+      top: '10%',
+      fontSize: '25px'
+    }).addTo('body')
+
+    let 
+dancing = ['couple1.png', 'couple2.png', 'couple3.png', 'jumpingGirl.png', 'soloHatMan1.png', 'soloWoman1.png', 'soloWoman2.png', 'soloWoman3.png']
+
+let windowArr = []
 //playing multiple
 const synth = new Tone.PolySynth().toDestination()
-const scale = nn.createScale('C5', 'major') //can also be minor and see in console log, can be a D#4 Major, etc. 
+const scale = nn.createScale('C4', 'major') //can also be minor and see in console log, can be a D#4 Major, etc. 
 const chord = nn.createChord(scale, 'triad') //1, 3, 5
 let keydown = false
 //let step = 0
@@ -31,32 +42,39 @@ function setup() {
   const building = nn.create('div').css({
     position: 'absolute',
     width: nn.width/2,
-    height: nn.height,
+    height: nn.height - (nn.height /4),
     left: nn.width/4,
     top: nn.height/4,
-    opacity: '60%',
+    opacity: '80%',
     backgroundColor: 'black'
   }).addTo('body')
   
+  let win;
   let adjust = 10
   let hDiff = 10;
-  const rows = nn.height / 70;
+  let winIdx = 0;
+  const rows = (nn.height / 70) -4;
+  
   for (let k = 0; k < rows; k++) {
-    for (let j = 0; j < 5; j++) {
-      for (let i = 0; i < 3; i++) {
-        building.append(makeBox('absolute', '30px', '50px', adjust, hDiff, '30%', 'yellow'))
-        adjust += 12
-        }
-      building.append(makeBox('absolute', '30px', '50px', adjust, hDiff, '80%', 'yellow'))
-      adjust += 40
+    for (let j = 0; j < 7; j++) {
+      win = makeBox('absolute', '40px', '60px', adjust, hDiff, '30%', 'yellow')
+      building.append(win)
+      adjust += 53.5
+      windowArr[winIdx] = win
+        winIdx++
     }
     hDiff += 70
     adjust = 10
   }
   
   
-  nn.get('body').css({backgroundImage: 'linear-gradient(black, navy, black)', height: '1000px'})
+  nn.get('body').css({backgroundImage: 'linear-gradient(black, navy, black)', height: nn.height})
 }
+let randDanInt = Math.floor(Math.random() *10)
+let randWinInt = Math.floor(Math.random() * 49)
+let ranDance = nn.create('img').set({
+  src: dancing[randDanInt]
+})
 
 function startPlaying() {
   //console.log(nn.notes)
@@ -66,16 +84,34 @@ function startPlaying() {
     ///const ran = nn.random(nn.notes) + 4
     synth.triggerAttack(chord) //keydown
     keydown = true
-    dancing[1].addTo('body')
+    
+    ranDance.css({ 
+      display: 'block',
+      width: '100%',
+      height: '100%'
+    }).addTo(windowArr[randWinInt].css({
+      opacity: '100%'
+    }))
     //step++
     //if (step >= chord.length) step = 0
-  } 
+
+}
 }
 function stopPlaying() {
   synth.triggerRelease(chord) //keyup
   keydown = false
+  ranDance.css ({
+    display: 'none'
+  }).addTo(windowArr[randWinInt].css({
+      opacity: '30%'
+    }))
+  randDanInt = Math.floor(Math.random() *10)
+  randWinInt = Math.floor(Math.random() *49)
+  ranDance = nn.create('img').set({
+  src: dancing[randDanInt]
+})
+  
 }
-
 nn.on('keydown', startPlaying)
 nn.on('keyup', stopPlaying)
 nn.on('load', setup)
