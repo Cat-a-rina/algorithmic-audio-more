@@ -3,6 +3,43 @@
 <body></body>
 <script>
 /* global nn, Tone */
+let music, stopTimer
+
+let songs = ['amen-break.mp3', 'katy.mp3', 'funky-drummer.mp3', 'electric-piano-chords.mp3']
+const samples = {
+  //couples
+  '0': { offset: 0.50, duration: 3.26 },
+  '1': { offset: 4.29, duration: 3.42 },
+  '2': { offset: 8.27, duration: 3.48 },
+  '3': { offset: 12.25, duration: 3.53 },
+  
+  //jumpingGirl
+  '4': { offset: 16.26, duration: 3.48 },
+  '5': { offset: 0.50, duration: 3.26 },
+  '6': { offset: 4.29, duration: 3.42 },
+  '7': { offset: 8.27, duration: 3.48 },
+  '8': { offset: 24.24, duration: 3.50 },
+  
+  //soloMan
+  '9': { offset: 12.25, duration: 3.53 },
+  '10': { offset: 16.26, duration: 3.48 },
+  '11': { offset: 24.24, duration: 3.50 },
+  
+  //soloBallerina
+  '12': { offset: 24.24, duration: 3.50 },
+}
+
+function playSample (e) {  
+  const s = samples[e.key]  
+  music.currentTime = s.offset
+  music.play()
+  
+  const stopTime = s.duration * 1000
+  const stopPlaying = () => music.pause()
+  if (stopTimer) clearTimeout(stopTimer)
+  stopTimer = setTimeout(stopPlaying, stopTime)
+  
+}
 
 nn.create('div').content('Play any key to see people of the city dance the night away ✨')
   .css({
@@ -20,10 +57,10 @@ let dancing = ['couple1.png',
               'couple3.png', 
               'couple4.png',
               'jumpingGirl.png', 
-              'soloHatMan1.png', 
               'soloWoman2.png',
               'soloWoman3.png',
               'soloWoman4.png', 
+              'soloHatMan1.png', 
               'soloMan2.png',
               'soloMan3.png', 
               'soloMan4.png', 
@@ -52,6 +89,11 @@ function makeBox(p, w, h, l, t, o, c) {
 }
 
 function setup() {
+    music = nn.create('audio')
+    .set('src', 'electric-piano-chords.mp3')
+    .addTo('body')
+    .on('loadeddata', fileLoaded)
+  
   nn.get('body')
     .css({
     backgroundImage: 'linear-gradient(black, navy, black)', 
