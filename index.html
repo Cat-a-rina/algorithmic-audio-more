@@ -3,19 +3,31 @@
 <body></body>
 <script>
 /* global nn, Tone */
-  //Tone.js alows us to express audio w less code
-//const synth = new Tone.Synth().toDestination()
 
-nn.create('div').content('Play any key to see people of the city dance the night away ✨').css({
+nn.create('div').content('Play any key to see people of the city dance the night away ✨')
+  .css({
       position: 'absolute',
-      color: 'white',
-      left: '10%',
-      top: '10%',
-      fontSize: '25px'
-    }).addTo('body')
+        color: 'white',
+          left: '10%',
+            top: '10%',
+              fontSize: '25px'
+    })
+  .addTo('body')
 
-    let 
-dancing = ['couple1.png', 'couple2.png', 'couple3.png', 'jumpingGirl.png', 'soloHatMan1.png', 'soloWoman1.png', 'soloWoman2.png', 'soloWoman3.png']
+
+let dancing = ['couple1.png', 
+              'couple2.png', 
+              'couple3.png', 
+              'couple4.png',
+              'jumpingGirl.png', 
+              'soloHatMan1.png', 
+              'soloWoman2.png',
+              'soloWoman3.png',
+              'soloWoman4.png', 
+              'soloMan2.png',
+              'soloMan3.png', 
+              'soloMan4.png', 
+              'soloBallerina.png', ]
 
 let windowArr = []
 //playing multiple
@@ -25,53 +37,98 @@ const chord = nn.createChord(scale, 'triad') //1, 3, 5
 let keydown = false
 //let step = 0
 
-function makeBox(pos, wid, hei, l, t, op, col) {
-  return nn.create('div').css({
-    position: pos,
-    width: wid,
-    height: hei,
-    left: l,
-    top: t,
-    opacity: op,
-    backgroundColor: col
-  }).addTo('body')
+function makeBox(p, w, h, l, t, o, c) {
+  return nn.create('div')
+  .css({
+    position: p,
+      width: w,
+        height: h,
+          left: l,
+            top: t,
+              opacity: o,
+                backgroundColor: c
+  })
+  .addTo('body')
 }
 
 function setup() {
+  nn.get('body')
+    .css({
+    backgroundImage: 'linear-gradient(black, navy, black)', 
+      height: nn.height
+  })
   
-  const building = nn.create('div').css({
-    position: 'absolute',
-    width: nn.width/2,
-    height: nn.height - (nn.height /4),
-    left: nn.width/4,
-    top: nn.height/4,
-    opacity: '80%',
-    backgroundColor: 'black'
-  }).addTo('body')
+  const h = nn.height - (nn.height /4)
   
+  const b2 = makeBox('absolute', 
+                       nn.width/4, 
+                         h, 
+                           nn.width/8, 
+                             nn.height - h/2 , 
+                               '80%',
+                                 'black')
+  .addTo('body')
+  
+      const b3 = makeBox('absolute', 
+                           nn.width/4, 
+                             h, 
+                               nn.width - 100, 
+                                 nn.height - 500 , 
+                                   '80%', 
+                                     'black')
+      .addTo('body')
+  
+          const b4 = makeBox('absolute', 
+                               nn.width/4, 
+                                 h, 
+                                   nn.width - 200, 
+                                     nn.height - 400, 
+                                       '80%', 
+                                         'black')
+          .addTo('body')
+   
+              const b5 = makeBox('absolute', 
+                                   nn.width/4, h, 
+                                     nn.width - 800, 
+                                       nn.height - 350, 
+                                         '80%', 
+                                            'black')
+              .addTo('body')
+  
+                  const building = makeBox('absolute', 
+                                           nn.width/2, 
+                                             h, 
+                                              nn.width/4,     nn.height/4, 
+                                               '80%', 
+                                                 'black')
+                  .addTo('body')
   let win;
   let adjust = 10
   let hDiff = 10;
   let winIdx = 0;
-  const rows = (nn.height / 70) -4;
+  const rows = (nn.height / 70) - 4;
   
   for (let k = 0; k < rows; k++) {
-    for (let j = 0; j < 7; j++) {
-      win = makeBox('absolute', '40px', '60px', adjust, hDiff, '30%', 'yellow')
+    for (let j = 0; j < 5; j++) {
+      win = makeBox('absolute', 
+                      '60px', 
+                        '60px', 
+                          adjust, 
+                            hDiff, 
+                              '30%', 
+                                'yellow')
       building.append(win)
-      adjust += 53.5
+      adjust += 76
       windowArr[winIdx] = win
-        winIdx++
+      winIdx++
     }
     hDiff += 70
     adjust = 10
   }
-  
-  
-  nn.get('body').css({backgroundImage: 'linear-gradient(black, navy, black)', height: nn.height})
 }
-let randDanInt = Math.floor(Math.random() *10)
-let randWinInt = Math.floor(Math.random() * 49)
+
+let randDanInt = Math.floor(Math.random() *13)
+let randWinInt = Math.floor(Math.random() * 35)
 let ranDance = nn.create('img').set({
   src: dancing[randDanInt]
 })
@@ -87,10 +144,11 @@ function startPlaying() {
     
     ranDance.css({ 
       display: 'block',
-      width: '100%',
-      height: '100%'
-    }).addTo(windowArr[randWinInt].css({
-      opacity: '100%'
+        width: '100%',
+          height: '100%'
+    })
+      .addTo(windowArr[randWinInt].css({
+            opacity: '100%'
     }))
     //step++
     //if (step >= chord.length) step = 0
@@ -98,15 +156,15 @@ function startPlaying() {
 }
 }
 function stopPlaying() {
-  synth.triggerRelease(chord) //keyup
+  synth.triggerRelease(chord)
   keydown = false
   ranDance.css ({
     display: 'none'
   }).addTo(windowArr[randWinInt].css({
       opacity: '30%'
     }))
-  randDanInt = Math.floor(Math.random() *10)
-  randWinInt = Math.floor(Math.random() *49)
+  randDanInt = Math.floor(Math.random() *13)
+  randWinInt = Math.floor(Math.random() *35)
   ranDance = nn.create('img').set({
   src: dancing[randDanInt]
 })
