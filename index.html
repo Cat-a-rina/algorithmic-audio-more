@@ -62,7 +62,12 @@ let windowArr = []
 
 let keydown = false
 //let step = 0
-
+ 
+let randDanInt = Math.floor(Math.random() * 13)
+let randWinInt = Math.floor(Math.random() * 35)
+let ranDance = nn.create('img').set({
+      src: dancing[randDanInt]
+    })
 function makeBox(p, w, h, l, t, o, c) {
     return nn.create('div')
     .css({
@@ -76,14 +81,10 @@ function makeBox(p, w, h, l, t, o, c) {
     })
     .addTo('body')
   }
-    let randDanInt = Math.floor(Math.random() * 13)
-    let randWinInt = Math.floor(Math.random() * 35)
-    let ranDance = nn.create('img').set({
-      src: dancing[randDanInt]
-    })
+ 
 
 function setup() {
-    let randDanInt = Math.floor(Math.random() * 13)
+    //let randDanInt = Math.floor(Math.random() * 13)
   
     let songIdx = 0
 
