@@ -2,44 +2,8 @@
 <script src="https://unpkg.com/tone"></script>
 <body></body>
 <script>
-/* global nn, Tone */
-let music, stopTimer
-
-let songs = ['amen-break.mp3', 'katy.mp3', 'funky-drummer.mp3', 'electric-piano-chords.mp3']
-const samples = {
-  //couples
-  '0': { offset: 0.50, duration: 3.26 },
-  '1': { offset: 4.29, duration: 3.42 },
-  '2': { offset: 8.27, duration: 3.48 },
-  '3': { offset: 12.25, duration: 3.53 },
-  
-  //jumpingGirl
-  '4': { offset: 16.26, duration: 3.48 },
-  '5': { offset: 0.50, duration: 3.26 },
-  '6': { offset: 4.29, duration: 3.42 },
-  '7': { offset: 8.27, duration: 3.48 },
-  '8': { offset: 24.24, duration: 3.50 },
-  
-  //soloMan
-  '9': { offset: 12.25, duration: 3.53 },
-  '10': { offset: 16.26, duration: 3.48 },
-  '11': { offset: 24.24, duration: 3.50 },
-  
-  //soloBallerina
-  '12': { offset: 24.24, duration: 3.50 },
-}
-
-function playSample (e) {  
-  const s = samples[e.key]  
-  music.currentTime = s.offset
-  music.play()
-  
-  const stopTime = s.duration * 1000
-  const stopPlaying = () => music.pause()
-  if (stopTimer) clearTimeout(stopTimer)
-  stopTimer = setTimeout(stopPlaying, stopTime)
-  
-}
+/* global nn */
+let music
 
 nn.create('div').content('Play any key to see people of the city dance the night away ✨')
   .css({
@@ -51,6 +15,30 @@ nn.create('div').content('Play any key to see people of the city dance the night
     })
   .addTo('body')
 
+let songs = ['amen-break.mp3', 'katy.mp3', 'funky-drummer.mp3', 'electric-piano-chords.mp3']
+
+const samples = {
+  //couples
+  0 : { offset: 0.50, duration: 3.26 },
+  1 : { offset: 4.29, duration: 3.42 },
+  2 : { offset: 8.27, duration: 3.48 },
+  3 : { offset: 12.25, duration: 3.53 },
+  
+  //jumpingGirl
+  4 : { offset: 16.26, duration: 3.48 },
+  5 : { offset: 0.50, duration: 3.26 },
+  6 : { offset: 4.29, duration: 3.42 },
+  7 : { offset: 8.27, duration: 3.48 },
+  8 : { offset: 24.24, duration: 3.50 },
+  
+  //soloMan
+  9 : { offset: 12.25, duration: 3.53 },
+  10 : { offset: 16.26, duration: 3.48 },
+  11 : { offset: 24.24, duration: 3.50 },
+  
+  //soloBallerina
+  12 : { offset: 24.24, duration: 3.50 },
+}
 
 let dancing = ['couple1.png', 
               'couple2.png', 
@@ -67,44 +55,66 @@ let dancing = ['couple1.png',
               'soloBallerina.png', ]
 
 let windowArr = []
-//playing multiple
-const synth = new Tone.PolySynth().toDestination()
-const scale = nn.createScale('C4', 'major') //can also be minor and see in console log, can be a D#4 Major, etc. 
-const chord = nn.createChord(scale, 'triad') //1, 3, 5
+
+//const synth = new Tone.PolySynth().toDestination()
+//const scale = nn.createScale('C4', 'major') //can also be minor and see in console log, can be a D#4 Major, etc. 
+//const chord = nn.createChord(scale, 'triad') //1, 3, 5
+
 let keydown = false
 //let step = 0
 
 function makeBox(p, w, h, l, t, o, c) {
-  return nn.create('div')
-  .css({
-    position: p,
-      width: w,
-        height: h,
-          left: l,
-            top: t,
-              opacity: o,
-                backgroundColor: c
-  })
-  .addTo('body')
-}
+    return nn.create('div')
+    .css({
+      position: p,
+        width: w,
+          height: h,
+            left: l,
+              top: t,
+                opacity: o,
+                  backgroundColor: c
+    })
+    .addTo('body')
+  }
+    let randDanInt = Math.floor(Math.random() * 13)
+    let randWinInt = Math.floor(Math.random() * 35)
+    let ranDance = nn.create('img').set({
+      src: dancing[randDanInt]
+    })
 
 function setup() {
+    let randDanInt = Math.floor(Math.random() * 13)
+  
+    let songIdx = 0
+
+    if (randDanInt === 0 || randDanInt === 1 ||randDanInt === 2 ||randDanInt === 3) {
+      songIdx = 0
+    }
+    if (randDanInt === 4 ||randDanInt === 5 ||randDanInt === 6 ||randDanInt === 7 ||randDanInt === 8) {
+      songIdx = 1
+    }
+    if (randDanInt === 9 ||randDanInt === 10 ||randDanInt === 11) {
+      songIdx = 2
+    }
+    if (randDanInt === 12) {
+      songIdx = 3
+    }
+
     music = nn.create('audio')
-    .set('src', 'electric-piano-chords.mp3')
+    .set('src', songs[songIdx])
     .addTo('body')
-    .on('loadeddata', fileLoaded)
+
+    nn.get('body')
+      .css({
+      backgroundImage: 'linear-gradient(black, navy, black)', 
+        height: nn.height
+    })
   
-  nn.get('body')
-    .css({
-    backgroundImage: 'linear-gradient(black, navy, black)', 
-      height: nn.height
-  })
+const h = nn.height - (nn.height /4)
   
-  const h = nn.height - (nn.height /4)
-  
-  const b2 = makeBox('absolute', 
+const b2 = makeBox('absolute', 
                        nn.width/4, 
-                         h, 
+                         h - 250, 
                            nn.width/8, 
                              nn.height - h/2 , 
                                '80%',
@@ -113,7 +123,7 @@ function setup() {
   
       const b3 = makeBox('absolute', 
                            nn.width/4, 
-                             h, 
+                             h - 250, 
                                nn.width - 100, 
                                  nn.height - 500 , 
                                    '80%', 
@@ -122,7 +132,7 @@ function setup() {
   
           const b4 = makeBox('absolute', 
                                nn.width/4, 
-                                 h, 
+                                 h - 250, 
                                    nn.width - 200, 
                                      nn.height - 400, 
                                        '80%', 
@@ -130,11 +140,12 @@ function setup() {
           .addTo('body')
    
               const b5 = makeBox('absolute', 
-                                   nn.width/4, h, 
-                                     nn.width - 800, 
-                                       nn.height - 350, 
-                                         '80%', 
-                                            'black')
+                                   nn.width/4, 
+                                     h - 250, 
+                                       nn.width - 800, 
+                                         nn.height - 350, 
+                                           '80%', 
+                                              'black')
               .addTo('body')
   
                   const building = makeBox('absolute', 
@@ -144,11 +155,11 @@ function setup() {
                                                '80%', 
                                                  'black')
                   .addTo('body')
-  let win;
-  let adjust = 10
-  let hDiff = 10;
-  let winIdx = 0;
-  const rows = (nn.height / 70) - 4;
+let win;
+let adjust = 10
+let hDiff = 10;
+let winIdx = 0;
+const rows = (nn.height / 70) - 4;
   
   for (let k = 0; k < rows; k++) {
     for (let j = 0; j < 5; j++) {
@@ -169,19 +180,12 @@ function setup() {
   }
 }
 
-let randDanInt = Math.floor(Math.random() *13)
-let randWinInt = Math.floor(Math.random() * 35)
-let ranDance = nn.create('img').set({
-  src: dancing[randDanInt]
-})
-
 function startPlaying() {
-  //console.log(nn.notes)
   if (!keydown) {
-    //const next = scale[step]
-    ///const ran - nn.random(scale)
-    ///const ran = nn.random(nn.notes) + 4
-    synth.triggerAttack(chord) //keydown
+    //synth.triggerAttack(chord) //keydown
+    const s = samples[randDanInt]  
+    music.currentTime = s.offset
+    music.play()
     keydown = true
     
     ranDance.css({ 
@@ -192,13 +196,12 @@ function startPlaying() {
       .addTo(windowArr[randWinInt].css({
             opacity: '100%'
     }))
-    //step++
-    //if (step >= chord.length) step = 0
-
+  }
 }
-}
+  
 function stopPlaying() {
-  synth.triggerRelease(chord)
+  //synth.triggerRelease(chord)
+  //music.pause()
   keydown = false
   ranDance.css ({
     display: 'none'
@@ -209,11 +212,28 @@ function stopPlaying() {
   randWinInt = Math.floor(Math.random() *35)
   ranDance = nn.create('img').set({
   src: dancing[randDanInt]
-})
+  })
+  
+  let songIdx = 0
+    if (randDanInt === 0 ||randDanInt === 1 ||randDanInt === 2 ||randDanInt === 3) {
+    songIdx = 0
+  }
+  if (randDanInt === 4 ||randDanInt === 5 ||randDanInt === 6 ||randDanInt === 7 ||randDanInt === 8) {
+    songIdx = 1
+  }
+  if (randDanInt === 9 ||randDanInt === 10 ||randDanInt === 11) {
+    songIdx = 2
+  }
+  if (randDanInt === 12) {
+    songIdx = 3
+  }
+  
+  music.set('src', songs[songIdx])
   
 }
+nn.on('load', setup)  
 nn.on('keydown', startPlaying)
 nn.on('keyup', stopPlaying)
-nn.on('load', setup)
+
 //nn.create('span').content('')
 </script>
