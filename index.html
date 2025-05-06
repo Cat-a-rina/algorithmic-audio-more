@@ -16,7 +16,7 @@ nn.create('div').content('Play any key to see people of the city dance the night
   .addTo('body')
 
 let songs = ['amen-break.mp3', 'katy.mp3', 'funky-drummer.mp3', 'electric-piano-chords.mp3']
-let music = songs[1]
+let music
 const samples = {
   //couples
   0 : { offset: 0.50, duration: 3.26 },
@@ -56,9 +56,9 @@ let dancing = ['couple1.png',
 
 let windowArr = []
 
-//const synth = new Tone.PolySynth().toDestination()
-//const scale = nn.createScale('C4', 'major') //can also be minor and see in console log, can be a D#4 Major, etc. 
-//const chord = nn.createChord(scale, 'triad') //1, 3, 5
+const synth = new Tone.PolySynth().toDestination()
+const scale = nn.createScale('C4', 'major') //can also be minor and see in console log, can be a D#4 Major, etc. 
+const chord = nn.createChord(scale, 'triad') //1, 3, 5
 
 let keydown = false
 //let step = 0
@@ -82,7 +82,59 @@ function makeBox(p, w, h, l, t, o, c) {
     .addTo('body')
   }
  
-
+function startPlaying() {
+  const s = samples[randDanInt]  
+  music.currentTime = s.offset
+  
+  if (!keydown) {
+    synth.triggerAttack(chord) //keydown
+    keydown = true
+    music.play()
+    ranDance.css({ 
+      display: 'block',
+        width: '100%',
+          height: '100%'
+    })
+      .addTo(windowArr[randWinInt].css({
+            opacity: '100%'
+    }))
+  }
+}
+  
+function stopPlaying() {
+  synth.triggerRelease(chord)
+  music.pause()
+  keydown = false
+  ranDance.css ({
+    display: 'none'
+  }).addTo(windowArr[randWinInt].css({
+      opacity: '30%'
+    }))
+  randDanInt = Math.floor(Math.random() *13)
+  randWinInt = Math.floor(Math.random() *35)
+  ranDance = nn.create('img').set({
+  src: dancing[randDanInt]
+  })
+  
+  let songIdx = 0
+    if (randDanInt === 0 ||randDanInt === 1 ||randDanInt === 2 ||randDanInt === 3) {
+    songIdx = 0
+  }
+  if (randDanInt === 4 ||randDanInt === 5 ||randDanInt === 6 ||randDanInt === 7 ||randDanInt === 8) {
+    songIdx = 1
+  }
+  if (randDanInt === 9 ||randDanInt === 10 ||randDanInt === 11) {
+    songIdx = 2
+  }
+  if (randDanInt === 12) {
+    songIdx = 3
+  }
+  
+  music.set('src', songs[songIdx])
+  
+}
+  
+  
 function setup() {
     //let randDanInt = Math.floor(Math.random() * 13)
   
@@ -181,65 +233,10 @@ const rows = (nn.height / 70) - 4;
   }
 }
 
-function startPlaying() {
-  const s = samples[randDanInt]  
-  music.currentTime = s.offset
-  music.play()
-  if (!keydown) {
-    //synth.triggerAttack(chord) //keydown
-    keydown = true
-    
-    ranDance.css({ 
-      display: 'block',
-        width: '100%',
-          height: '100%'
-    })
-      .addTo(windowArr[randWinInt].css({
-            opacity: '100%'
-    }))
-  }
-}
-  
-function stopPlaying() {
-  //synth.triggerRelease(chord)
-  //music.pause()
-  keydown = false
-  ranDance.css ({
-    display: 'none'
-  }).addTo(windowArr[randWinInt].css({
-      opacity: '30%'
-    }))
-  randDanInt = Math.floor(Math.random() *13)
-  randWinInt = Math.floor(Math.random() *35)
-  ranDance = nn.create('img').set({
-  src: dancing[randDanInt]
-  })
-  
-  let songIdx = 0
-    if (randDanInt === 0 ||randDanInt === 1 ||randDanInt === 2 ||randDanInt === 3) {
-    songIdx = 0
-  }
-  if (randDanInt === 4 ||randDanInt === 5 ||randDanInt === 6 ||randDanInt === 7 ||randDanInt === 8) {
-    songIdx = 1
-  }
-  if (randDanInt === 9 ||randDanInt === 10 ||randDanInt === 11) {
-    songIdx = 2
-  }
-  if (randDanInt === 12) {
-    songIdx = 3
-  }
-  
-  music.set('src', songs[songIdx])
-  
-}
-  
-function playRandSong() {
-  music.play()
-}
+
 nn.on('load', setup)  
 nn.on('keydown', startPlaying)
 nn.on('keyup', stopPlaying)
-nn.on('keypress', playrandSong)
 
 //nn.create('span').content('')
 </script>
