@@ -3,7 +3,7 @@
 <body></body>
 <script>
 /* global nn */
-let music
+
 
 nn.create('div').content('Play any key to see people of the city dance the night away ✨')
   .css({
@@ -16,7 +16,7 @@ nn.create('div').content('Play any key to see people of the city dance the night
   .addTo('body')
 
 let songs = ['amen-break.mp3', 'katy.mp3', 'funky-drummer.mp3', 'electric-piano-chords.mp3']
-
+let music = songs[1]
 const samples = {
   //couples
   0 : { offset: 0.50, duration: 3.26 },
@@ -182,11 +182,11 @@ const rows = (nn.height / 70) - 4;
 }
 
 function startPlaying() {
+  const s = samples[randDanInt]  
+  music.currentTime = s.offset
+  music.play()
   if (!keydown) {
     //synth.triggerAttack(chord) //keydown
-    const s = samples[randDanInt]  
-    music.currentTime = s.offset
-    music.play()
     keydown = true
     
     ranDance.css({ 
@@ -232,9 +232,14 @@ function stopPlaying() {
   music.set('src', songs[songIdx])
   
 }
+  
+function playRandSong() {
+  music.play()
+}
 nn.on('load', setup)  
 nn.on('keydown', startPlaying)
 nn.on('keyup', stopPlaying)
+nn.on('keypress', playrandSong)
 
 //nn.create('span').content('')
 </script>
